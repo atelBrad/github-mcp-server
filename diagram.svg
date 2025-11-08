@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Persona “Bleed” via Aggregated Platform Updates</title>
+<style>
+  body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; background:#fafafa; }
+  .box { fill:#ffffff; stroke:#333333; stroke-width:1.2; }
+  .group { fill:#f0f4ff; stroke:#5a78ff; stroke-width:1.2; }
+  .label { font-size:12px; fill:#111; }
+  .small { font-size:11px; fill:#333; }
+  .arrow { stroke:#555; stroke-width:1.4; marker-end:url(#arrow); }
+  .dash { stroke:#999; stroke-dasharray:5 4; }
+</style>
+</head>
+<body>
+<svg width="1080" height="820" viewBox="0 0 1080 820" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagram of platform-level persona changes from aggregated signals">
+
+  <!-- Arrow marker -->
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#555" />
+    </marker>
+  </defs>
+
+  <!-- Layer 1 group -->
+  <rect x="20" y="20" width="1040" height="190" class="group" rx="8" />
+  <text x="40" y="44" class="label" font-weight="600">Layer 1: Per‑User Sessions (Isolated)</text>
+
+  <!-- User A / B sessions -->
+  <rect x="40" y="60" width="300" height="120" class="box" rx="8" />
+  <text x="55" y="80" class="label" font-weight="600">User A Session</text>
+  <text x="55" y="100" class="small">• turns, short‑term memory</text>
+  <text x="55" y="118" class="small">• ratings (1–4)</text>
+  <text x="55" y="136" class="small">• safety events</text>
+
+  <rect x="360" y="60" width="300" height="120" class="box" rx="8" />
+  <text x="375" y="80" class="label" font-weight="600">User B Session</text>
+  <text x="375" y="100" class="small">• turns, short‑term memory</text>
+  <text x="375" y="118" class="small">• ratings (1–4)</text>
+  <text x="375" y="136" class="small">• safety events</text>
+
+  <!-- AlloyDB -->
+  <rect x="680" y="60" width="360" height="120" class="box" rx="8" />
+  <text x="695" y="80" class="label" font-weight="600">AlloyDB / PostgreSQL</text>
+  <text x="695" y="100" class="small">fast transactional read pools</text>
+  <text x="695" y="118" class="small">per‑session state & counters, recent turns</text>
+
+  <!-- Arrows to AlloyDB -->
+  <line x1="340" y1="120" x2="680" y2="120" class="arrow" />
+  <line x1="660" y1="120" x2="680" y2="120" class="arrow" />
+
+  <!-- Streams / Analytics -->
+  <rect x="200" y="240" width="300" height="80" class="box" rx="8" />
+  <text x="215" y="260" class="label" font-weight="600">CDC / Streams + ETL</text>
+  <text x="215" y="280" class="small">(e.g., Datastream)</text>
+
+  <line x1="860" y1="180" x2="350" y2="240" class="arrow" />
+  <rect x="520" y="230" width="540" height="110" class="box" rx="8" />
+  <text x="535" y="250" class="label" font-weight="600">Analytics & Data Pipeline</text>
+  <text x="535" y="270" class="small">• aggregated ratings • engagement metrics • safety hit rates</text>
+  <text x="535" y="288" class="small">• drift diagnostics (entropy, distinct‑n, template usage)</text>
+
+  <line x1="500" y1="280" x2="520" y2="280" class="arrow" />
+  <line x1="350" y1="280" x2="520" y2="280" class="dash" />
+
+  <!-- Platform-Level Updates group -->
+  <rect x="20" y="370" width="1040" height="170" class="group" rx="8" />
+  <text x="40" y="394" class="label" font-weight="600">Platform‑Level Update Layer</text>
+
+  <!-- Update boxes -->
+  <rect x="40" y="410" width="300" height="110" class="box" rx="8" />
+  <text x="55" y="430" class="label" font-weight="600">Model / version changes</text>
+  <text x="55" y="450" class="small">(LLM weights, kernels, quantization)</text>
+
+  <rect x="360" y="410" width="300" height="110" class="box" rx="8" />
+  <text x="375" y="430" class="label" font-weight="600">Decoding & ranking</text>
+  <text x="375" y="450" class="small">(temperature, top‑p, candidate selection)</text>
+
+  <rect x="680" y="410" width="300" height="110" class="box" rx="8" />
+  <text x="695" y="430" class="label" font-weight="600">Prompt anchoring & memory policies</text>
+
+  <rect x="40" y="530" width="300" height="110" class="box" rx="8" />
+  <text x="55" y="550" class="label" font-weight="600">Safety / moderation</text>
+  <text x="55" y="570" class="small">filters & classifiers</text>
+
+  <rect x="360" y="530" width="300" height="110" class="box" rx="8" />
+  <text x="375" y="550" class="label" font-weight="600">Character card / global configs</text>
+
+  <!-- Arrows from Analytics to updates -->
+  <line x1="790" y1="340" x2="190" y2="410" class="arrow" />
+  <line x1="790" y1="340" x2="510" y2="410" class="arrow" />
+  <line x1="790" y1="340" x2="830" y2="410" class="arrow" />
+  <line x1="790" y1="340" x2="190" y2="530" class="arrow" />
+  <line x1="790" y1="340" x2="510" y2="530" class="arrow" />
+
+  <!-- Spanner -->
+  <rect x="680" y="540" width="360" height="90" class="box" rx="8" />
+  <text x="695" y="560" class="label" font-weight="600">Spanner</text>
+  <text x="695" y="580" class="small">character defs, policies, configs, global durable state</text>
+
+  <!-- Arrows to Spanner -->
+  <line x1="190" y1="465" x2="680" y2="570" class="arrow" />
+  <line x1="510" y1="465" x2="680" y2="570" class="arrow" />
+  <line x1="830" y1="465" x2="860" y2="540" class="arrow" />
+  <line x1="190" y1="585" x2="680" y2="585" class="arrow" />
+  <line x1="510" y1="585" x2="680" y2="585" class="arrow" />
+
+  <!-- Serving & Inference group -->
+  <rect x="20" y="650" width="1040" height="150" class="group" rx="8" />
+  <text x="40" y="674" class="label" font-weight="600">Serving Stack & Inference</text>
+
+  <rect x="40" y="690" width="480" height="90" class="box" rx="8" />
+  <text x="55" y="710" class="label" font-weight="600">Go microservices (chat stack)</text>
+  <text x="55" y="730" class="small">orchestrate sessions; read configs from Spanner;</text>
+  <text x="55" y="748" class="small">use AlloyDB for hot reads/writes</text>
+
+  <rect x="540" y="690" width="480" height="90" class="box" rx="8" />
+  <text x="555" y="710" class="label" font-weight="600">Inference optimizations</text>
+  <text x="555" y="730" class="small">KV cache & inter‑turn caching; MQA, KV sharing; int8/bf16</text>
+
+  <!-- Arrows into Serving -->
+  <line x1="860" y1="630" x2="860" y2="690" class="arrow" />
+  <line x1="300" y1="180" x2="300" y2="690" class="arrow" />
+
+  <!-- Future Sessions (labels) -->
+  <text x="40" y="815" class="label" font-weight="600">User C New Session — sees updated global tone; private context isolated</text>
+  <text x="580" y="815" class="label" font-weight="600">User D New Session — sees updated global tone; private context isolated</text>
+
+  <!-- Note -->
+  <text x="40" y="220" class="small" fill="#222">
+    No direct leakage: private turns aren’t inserted into other sessions. Aggregated signals
+    drive platform‑level updates that cause coordinated style shifts across fresh threads.
+  </text>
+</svg>
+</body>
+</html>
