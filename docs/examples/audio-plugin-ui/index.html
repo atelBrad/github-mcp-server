@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Audio Plugin Control Surface</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="page-header">
+      <div class="brand">
+        <div class="brand-icon" aria-hidden="true">🎛️</div>
+        <div>
+          <h1>Atlas Audio Studio</h1>
+          <p>Polish your tracks with the Atlas multi-effect audio plugin.</p>
+        </div>
+      </div>
+      <div class="session-actions">
+        <button class="ghost" id="resetSession" type="button">Reset</button>
+        <button class="primary" id="exportMix" type="button">Export Mix</button>
+      </div>
+    </header>
+
+    <main class="layout-grid">
+      <section class="panel file-panel" aria-labelledby="filePanelTitle">
+        <header>
+          <h2 id="filePanelTitle">Source Audio</h2>
+          <p>Drop in a file to audition and tweak in Atlas.</p>
+        </header>
+        <div class="dropzone" id="dropZone">
+          <div class="dropzone-icon" aria-hidden="true">⬆️</div>
+          <p><strong>Drag &amp; drop</strong> a WAV, MP3, or FLAC file</p>
+          <p class="muted">or click to browse from your computer</p>
+          <input
+            type="file"
+            id="audioInput"
+            accept="audio/*"
+            aria-label="Select an audio file"
+          />
+        </div>
+        <dl class="file-info" id="fileInfo" hidden>
+          <div>
+            <dt>Filename</dt>
+            <dd id="fileName">—</dd>
+          </div>
+          <div>
+            <dt>Length</dt>
+            <dd id="fileDuration">—</dd>
+          </div>
+          <div>
+            <dt>Sample rate</dt>
+            <dd id="fileSampleRate">—</dd>
+          </div>
+          <div>
+            <dt>Size</dt>
+            <dd id="fileSize">—</dd>
+          </div>
+        </dl>
+        <div class="audio-controls" hidden id="transport">
+          <button type="button" id="playPause" class="transport-btn" aria-label="Play or pause">
+            ▶️
+          </button>
+          <input type="range" id="scrub" min="0" max="100" value="0" aria-label="Seek through the track" />
+          <div class="timecode" id="timecode">0:00</div>
+          <button type="button" id="loopToggle" class="ghost" aria-pressed="false">Loop Off</button>
+        </div>
+        <canvas id="waveform" height="120" aria-hidden="true"></canvas>
+      </section>
+
+      <section class="panel" aria-labelledby="presetPanelTitle">
+        <header>
+          <h2 id="presetPanelTitle">Quick Presets</h2>
+          <p>Start from curated chains tailored for common mix tasks.</p>
+        </header>
+        <div class="preset-list" role="group" aria-label="Preset selection">
+          <label class="preset-card">
+            <input type="radio" name="preset" value="clean" checked />
+            <div>
+              <h3>Clean Vocal Polish</h3>
+              <p>Gentle compression, de-essing, and clarity boost.</p>
+            </div>
+          </label>
+          <label class="preset-card">
+            <input type="radio" name="preset" value="lofi" />
+            <div>
+              <h3>Lo-fi Tape Saturation</h3>
+              <p>Warmth, flutter, and filtered high-end.</p>
+            </div>
+          </label>
+          <label class="preset-card">
+            <input type="radio" name="preset" value="club" />
+            <div>
+              <h3>Club Master Glue</h3>
+              <p>Punchy bass, stereo widening, and maximized loudness.</p>
+            </div>
+          </label>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="effectsPanelTitle">
+        <header>
+          <h2 id="effectsPanelTitle">Effects Chain</h2>
+          <p>Toggle modules on or off to sculpt your sound.</p>
+        </header>
+        <ul class="effects-grid">
+          <li>
+            <label class="switch">
+              <input type="checkbox" data-effect="compressor" checked />
+              <span class="slider"></span>
+              <span class="label-text">Compressor</span>
+            </label>
+            <p class="muted">Controls dynamic range for consistent loudness.</p>
+          </li>
+          <li>
+            <label class="switch">
+              <input type="checkbox" data-effect="eq" checked />
+              <span class="slider"></span>
+              <span class="label-text">4-Band EQ</span>
+            </label>
+            <p class="muted">Shape tone with surgical precision.</p>
+          </li>
+          <li>
+            <label class="switch">
+              <input type="checkbox" data-effect="saturation" />
+              <span class="slider"></span>
+              <span class="label-text">Saturation</span>
+            </label>
+            <p class="muted">Blend tasteful harmonic richness.</p>
+          </li>
+          <li>
+            <label class="switch">
+              <input type="checkbox" data-effect="delay" />
+              <span class="slider"></span>
+              <span class="label-text">Stereo Delay</span>
+            </label>
+            <p class="muted">Tempo-synced echoes for dimension.</p>
+          </li>
+          <li>
+            <label class="switch">
+              <input type="checkbox" data-effect="reverb" checked />
+              <span class="slider"></span>
+              <span class="label-text">Reverb</span>
+            </label>
+            <p class="muted">Place vocals or instruments in a lush space.</p>
+          </li>
+          <li>
+            <label class="switch">
+              <input type="checkbox" data-effect="limiter" checked />
+              <span class="slider"></span>
+              <span class="label-text">Limiter</span>
+            </label>
+            <p class="muted">Protect against clipping and boost final loudness.</p>
+          </li>
+        </ul>
+      </section>
+
+      <section class="panel" aria-labelledby="parametersPanelTitle">
+        <header>
+          <h2 id="parametersPanelTitle">Fine-Tune Parameters</h2>
+          <p>Dial in effect amounts and automation envelopes.</p>
+        </header>
+        <form class="parameter-form" id="parameterForm">
+          <div class="param-control">
+            <label for="threshold">Compressor Threshold</label>
+            <input
+              type="range"
+              id="threshold"
+              name="threshold"
+              min="-60"
+              max="0"
+              value="-24"
+              step="1"
+              aria-describedby="thresholdValue"
+            />
+            <output id="thresholdValue">-24 dB</output>
+          </div>
+          <div class="param-control">
+            <label for="ratio">Compressor Ratio</label>
+            <input
+              type="range"
+              id="ratio"
+              name="ratio"
+              min="1"
+              max="20"
+              value="4"
+              step="0.1"
+              aria-describedby="ratioValue"
+            />
+            <output id="ratioValue">4:1</output>
+          </div>
+          <div class="param-control">
+            <label for="attack">Attack</label>
+            <input
+              type="range"
+              id="attack"
+              name="attack"
+              min="0"
+              max="200"
+              value="35"
+              step="1"
+              aria-describedby="attackValue"
+            />
+            <output id="attackValue">35 ms</output>
+          </div>
+          <div class="param-control">
+            <label for="release">Release</label>
+            <input
+              type="range"
+              id="release"
+              name="release"
+              min="50"
+              max="1200"
+              value="280"
+              step="10"
+              aria-describedby="releaseValue"
+            />
+            <output id="releaseValue">280 ms</output>
+          </div>
+          <div class="param-control">
+            <label for="wetDry">Wet / Dry Mix</label>
+            <input
+              type="range"
+              id="wetDry"
+              name="wetDry"
+              min="0"
+              max="100"
+              value="65"
+              step="1"
+              aria-describedby="wetDryValue"
+            />
+            <output id="wetDryValue">65%</output>
+          </div>
+          <div class="param-control">
+            <label for="outputGain">Output Gain</label>
+            <input
+              type="range"
+              id="outputGain"
+              name="outputGain"
+              min="-12"
+              max="12"
+              value="1"
+              step="0.5"
+              aria-describedby="outputGainValue"
+            />
+            <output id="outputGainValue">+1 dB</output>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel" aria-labelledby="analysisPanelTitle">
+        <header>
+          <h2 id="analysisPanelTitle">Real-time Analysis</h2>
+          <p>Monitor loudness and spectrum to ensure a broadcast-ready mix.</p>
+        </header>
+        <div class="analysis-grid">
+          <div class="meter">
+            <h3>Output Level</h3>
+            <div class="meter-bar" role="meter" aria-valuemin="-48" aria-valuemax="6" aria-valuenow="-18">
+              <span id="meterNeedle" style="height: 40%"></span>
+            </div>
+            <p class="muted" id="meterValue">-18 dB RMS</p>
+          </div>
+          <div class="spectrum">
+            <h3>Spectrum View</h3>
+            <canvas id="spectrum" height="120" aria-hidden="true"></canvas>
+            <p class="muted">Hover to inspect frequency bins in detail.</p>
+          </div>
+          <div class="notes">
+            <h3>Session Notes</h3>
+            <textarea id="sessionNotes" rows="6" placeholder="Document revisions, mix goals, and client feedback."></textarea>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden>
+      <span id="toastMessage"></span>
+    </div>
+
+    <audio id="audioPlayer" preload="metadata" hidden></audio>
+    <script src="script.js" type="module"></script>
+  </body>
+</html>
