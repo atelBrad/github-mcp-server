@@ -1277,6 +1277,10 @@ set the following environment variable:
 export GITHUB_MCP_TOOL_ADD_ISSUE_COMMENT_DESCRIPTION="an alternative description"
 ```
 
+## UI Mockups & Examples
+
+- [Atlas Audio Studio UI](docs/examples/audio-plugin-ui/README.md) – A browser-based control surface concept for an audio plugin featuring file ingest, presets, metering, and export flows.
+
 ## Library Usage
 
 The exported Go API of this module should currently be considered unstable, and subject to breaking changes. In the future, we may offer stability; please file an issue if there is a use case where this would be valuable.
